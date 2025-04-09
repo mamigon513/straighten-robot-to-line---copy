@@ -6,13 +6,13 @@ def straighten_to_line():
     count = 0
 
     CutebotPro.pwm_cruise_control(0, 0)
-    basic.pause(100)
+    basic.pause(500)
 
     # turn on headlights(pink = 247, 25, 236)
     CutebotPro.single_headlights(CutebotProRGBLight.RGBL, 247, 25, 236)
     CutebotPro.single_headlights(CutebotProRGBLight.RGBR, 247, 25, 236)
     #keep turning till we are straight
-    while(abs(CutebotPro.get_offset()) > 0 or count < 20):
+    while(abs(CutebotPro.get_offset()) > 0 or count < 5):
         # update count of while loop iterations
         count = count + 1
         #get offset
@@ -36,14 +36,14 @@ def straighten_to_line():
             # turn off headlights
             CutebotPro.turn_off_all_headlights()
 
-            CutebotPro.pwm_cruise_control(0, 0)
-            basic.pause(20)
+        CutebotPro.pwm_cruise_control(0, 0)
+        basic.pause(20)
 
-        # turn off headlights
-        CutebotPro.turn_off_all_headlights()
-        # go forward again
-        CutebotPro.pwm_cruise_control(20, 20)
-        basic.pause(1000)
+    # turn off headlights
+    CutebotPro.turn_off_all_headlights()
+    # go forward again
+    CutebotPro.pwm_cruise_control(10, 10)
+    basic.pause(1000)
 
 def detect_line():
     # get the line tracking offset
@@ -54,5 +54,5 @@ def detect_line():
         straighten_to_line()
 
 
-CutebotPro.pwm_cruise_control(20, 20)
+CutebotPro.pwm_cruise_control(10, 10)
 basic.forever(detect_line)
