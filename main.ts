@@ -61,7 +61,6 @@ function detect_line(): number {
     return line
 }
 
-CutebotPro.pwmCruiseControl(10, 10)
 basic.pause(500)
 let line_found = 0
 while (line_found == 0) {

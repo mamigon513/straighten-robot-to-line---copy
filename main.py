@@ -56,7 +56,6 @@ def detect_line():
     return line
 
 
-CutebotPro.pwm_cruise_control(10, 10)
 basic.pause(500)
 line_found = 0
 while line_found == 0:
