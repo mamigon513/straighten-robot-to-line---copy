@@ -5,13 +5,13 @@ function straighten_to_line() {
     let speed: number;
     // keep counter to break while loop
     let count = 0
-    CutebotPro.pwmCruiseControl(0, 0)
-    basic.pause(500)
+    CutebotPro.pwmCruiseControl(20, 20)
+    basic.pause(50)
     //  turn on headlights(pink = 247, 25, 236)
     CutebotPro.singleHeadlights(CutebotProRGBLight.RGBL, 247, 25, 236)
     CutebotPro.singleHeadlights(CutebotProRGBLight.RGBR, 247, 25, 236)
     // keep turning till we are straight
-    while (Math.abs(CutebotPro.getOffset()) > 0 || count < 5) {
+    while (Math.abs(CutebotPro.getOffset()) > 0 && count < 10) {
         //  update count of while loop iterations
         count = count + 1
         // get offset
@@ -44,8 +44,7 @@ function straighten_to_line() {
     //  turn off headlights
     CutebotPro.turnOffAllHeadlights()
     //  go forward again
-    CutebotPro.pwmCruiseControl(10, 10)
-    basic.pause(1000)
+    CutebotPro.distanceRunning(CutebotProOrientation.Advance, 15.35, CutebotProDistanceUnits.Cm)
 }
 
 CutebotPro.pwmCruiseControl(10, 10)
@@ -54,6 +53,7 @@ basic.forever(function detect_line() {
     let error = CutebotPro.getOffset()
     //  detects black line
     if (Math.abs(error) < 3000) {
+        CutebotPro.pwmCruiseControl(0, 0)
         straighten_to_line()
     }
     
