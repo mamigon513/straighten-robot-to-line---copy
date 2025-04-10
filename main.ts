@@ -1,5 +1,5 @@
 // This code will stop the robot when it detects a line and get it (mostly) straight 
-//  according to the line. Perhaps make it so 
+//  according to the line.
 function straighten_to_line() {
     let error: number;
     let speed: number;
@@ -47,14 +47,24 @@ function straighten_to_line() {
     CutebotPro.distanceRunning(CutebotProOrientation.Advance, 15.35, CutebotProDistanceUnits.Cm)
 }
 
-CutebotPro.pwmCruiseControl(10, 10)
-basic.forever(function detect_line() {
+function detect_line(): number {
     //  get the line tracking offset
     let error = CutebotPro.getOffset()
+    let line = 0
     //  detects black line
     if (Math.abs(error) < 3000) {
         CutebotPro.pwmCruiseControl(0, 0)
         straighten_to_line()
+        line = 1
     }
     
-})
+    return line
+}
+
+CutebotPro.pwmCruiseControl(10, 10)
+basic.pause(500)
+let line_found = 0
+while (line_found == 0) {
+    line_found = detect_line()
+}
+CutebotPro.distanceRunning(CutebotProOrientation.Advance, 15.35, CutebotProDistanceUnits.Cm)

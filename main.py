@@ -1,5 +1,5 @@
 #This code will stop the robot when it detects a line and get it (mostly) straight 
-# according to the line. Perhaps make it so 
+# according to the line.
 
 def straighten_to_line():
     #keep counter to break while loop
@@ -47,12 +47,18 @@ def straighten_to_line():
 def detect_line():
     # get the line tracking offset
     error = CutebotPro.get_offset()
-    
+    line = 0
     # detects black line
     if abs(error) < 3000:
         CutebotPro.pwm_cruise_control(0, 0)
         straighten_to_line()
+        line = 1
+    return line
 
 
 CutebotPro.pwm_cruise_control(10, 10)
-basic.forever(detect_line)
+basic.pause(500)
+line_found = 0
+while line_found == 0:
+    line_found = detect_line()
+CutebotPro.distance_running(CutebotProOrientation.ADVANCE, 15.35, CutebotProDistanceUnits.CM)
