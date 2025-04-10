@@ -41,8 +41,6 @@ def straighten_to_line():
 
     # turn off headlights
     CutebotPro.turn_off_all_headlights()
-    # go forward again
-    CutebotPro.distance_running(CutebotProOrientation.ADVANCE, 15.35, CutebotProDistanceUnits.CM)
 
 def detect_line():
     # get the line tracking offset
@@ -55,8 +53,7 @@ def detect_line():
         line = 1
     return line
 
-
-basic.pause(500)
+CutebotPro.pwm_cruise_control(10, 10)
 line_found = 0
 while line_found == 0:
     line_found = detect_line()

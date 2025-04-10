@@ -43,8 +43,6 @@ function straighten_to_line() {
     }
     //  turn off headlights
     CutebotPro.turnOffAllHeadlights()
-    //  go forward again
-    CutebotPro.distanceRunning(CutebotProOrientation.Advance, 15.35, CutebotProDistanceUnits.Cm)
 }
 
 function detect_line(): number {
@@ -61,7 +59,7 @@ function detect_line(): number {
     return line
 }
 
-basic.pause(500)
+CutebotPro.pwmCruiseControl(10, 10)
 let line_found = 0
 while (line_found == 0) {
     line_found = detect_line()
