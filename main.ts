@@ -17,13 +17,13 @@ function straighten_to_line() {
         // get offset
         error = CutebotPro.getOffset()
         //  set turn speed
-        speed = 30 + error / 3000 * 70
+        speed = 20 + error / 3000 * 30
         //  turn right
         if (error > 0) {
             // turn on right headlight(blue = 51, 255, 252)
             CutebotPro.singleHeadlights(CutebotProRGBLight.RGBR, 51, 255, 252)
             CutebotPro.pwmCruiseControl(speed, -1 * speed)
-            basic.pause(30)
+            basic.pause(50)
             //  turn off headlights
             CutebotPro.turnOffAllHeadlights()
         }
@@ -33,7 +33,7 @@ function straighten_to_line() {
             // turn on left headlight(blue = 51, 255, 252)
             CutebotPro.singleHeadlights(CutebotProRGBLight.RGBL, 51, 255, 252)
             CutebotPro.pwmCruiseControl(-1 * speed, speed)
-            basic.pause(30)
+            basic.pause(50)
             //  turn off headlights
             CutebotPro.turnOffAllHeadlights()
         }
@@ -51,6 +51,7 @@ function detect_line(): number {
     let line = 0
     //  detects black line
     if (Math.abs(error) < 3000) {
+        basic.pause(50)
         CutebotPro.pwmCruiseControl(0, 0)
         straighten_to_line()
         line = 1
@@ -59,9 +60,26 @@ function detect_line(): number {
     return line
 }
 
-CutebotPro.pwmCruiseControl(10, 10)
-let line_found = 0
-while (line_found == 0) {
-    line_found = detect_line()
+function move_forward() {
+    CutebotPro.pwmCruiseControl(10, 10)
+    let line_found = 0
+    while (line_found == 0) {
+        line_found = detect_line()
+    }
+    CutebotPro.distanceRunning(CutebotProOrientation.Advance, 15.35, CutebotProDistanceUnits.Cm)
+    basic.pause(100)
 }
-CutebotPro.distanceRunning(CutebotProOrientation.Advance, 15.35, CutebotProDistanceUnits.Cm)
+
+function turn_left() {
+    CutebotPro.trolleySteering(CutebotProTurn.LeftInPlace, 95)
+    basic.pause(100)
+}
+
+function turn_right() {
+    CutebotPro.trolleySteering(CutebotProTurn.RightInPlace, 95)
+    basic.pause(100)
+}
+
+move_forward()
+// turn_left()
+move_forward()

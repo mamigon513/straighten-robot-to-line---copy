@@ -18,13 +18,13 @@ def straighten_to_line():
         #get offset
         error = CutebotPro.get_offset()
         # set turn speed
-        speed = 30 + (error/3000)*70
+        speed = 20 + (error/3000)*30
         # turn right
         if error > 0:
             #turn on right headlight(blue = 51, 255, 252)
             CutebotPro.single_headlights(CutebotProRGBLight.RGBR, 51, 255, 252)
             CutebotPro.pwm_cruise_control(speed, -1*speed)
-            basic.pause(30)
+            basic.pause(50)
             # turn off headlights
             CutebotPro.turn_off_all_headlights()
         # turn left
@@ -32,7 +32,7 @@ def straighten_to_line():
             #turn on left headlight(blue = 51, 255, 252)
             CutebotPro.single_headlights(CutebotProRGBLight.RGBL, 51, 255, 252)
             CutebotPro.pwm_cruise_control(-1*speed, speed)
-            basic.pause(30)
+            basic.pause(50)
             # turn off headlights
             CutebotPro.turn_off_all_headlights()
 
@@ -48,13 +48,29 @@ def detect_line():
     line = 0
     # detects black line
     if abs(error) < 3000:
+        basic.pause(50)
         CutebotPro.pwm_cruise_control(0, 0)
         straighten_to_line()
         line = 1
     return line
 
-CutebotPro.pwm_cruise_control(10, 10)
-line_found = 0
-while line_found == 0:
-    line_found = detect_line()
-CutebotPro.distance_running(CutebotProOrientation.ADVANCE, 15.35, CutebotProDistanceUnits.CM)
+def move_forward():
+    CutebotPro.pwm_cruise_control(10, 10)
+    line_found = 0
+    while line_found == 0:
+        line_found = detect_line()
+    CutebotPro.distance_running(CutebotProOrientation.ADVANCE, 15.35, CutebotProDistanceUnits.CM)
+    basic.pause(100)
+def turn_left():
+    CutebotPro.trolley_steering(CutebotProTurn.LEFT_IN_PLACE, 95)
+    basic.pause(100)
+
+def turn_right():
+    CutebotPro.trolley_steering(CutebotProTurn.RIGHT_IN_PLACE, 95)
+    basic.pause(100)
+
+move_forward()
+#turn_left()
+move_forward()
+#turn_right()
+#move_forward()
