@@ -12,29 +12,30 @@ def straighten_to_line():
     CutebotPro.single_headlights(CutebotProRGBLight.RGBL, 247, 25, 236)
     CutebotPro.single_headlights(CutebotProRGBLight.RGBR, 247, 25, 236)
     #keep turning till we are straight
-    while(abs(error) > 0 and count < 100):
-        # update count of while loop iterations
+    while(abs(error) > 50 and count < 50):
+        # update count of while loop iterations so we can prevent getting stuck
         count = count + 1
         #get offset
         error = CutebotPro.get_offset()
         # set turn speed
-        speed = 30 + (error/3000)*70
+        speed = 30 + (abs(error)/3000)*70
         # turn right
-        if error > 0:
+        if error < 0:
             #turn on right headlight(blue = 51, 255, 252)
             CutebotPro.single_headlights(CutebotProRGBLight.RGBR, 51, 255, 252)
-            CutebotPro.pwm_cruise_control(speed, -1*speed)
+            CutebotPro.pwm_cruise_control(speed, 0)
             basic.pause(30)
         # turn left
-        if error < 0:
+        if error > 0:
             #turn on left headlight(blue = 51, 255, 252)
             CutebotPro.single_headlights(CutebotProRGBLight.RGBL, 51, 255, 252)
-            CutebotPro.pwm_cruise_control(-1*speed, speed)
+            CutebotPro.pwm_cruise_control(speed*-1, 0)
             basic.pause(30)
         # turn off headlights
         CutebotPro.turn_off_all_headlights()
         CutebotPro.pwm_cruise_control(0, 0)
         basic.pause(50)
+        error = CutebotPro.get_offset()
 
     # turn off headlights
     CutebotPro.turn_off_all_headlights()
@@ -45,7 +46,7 @@ def detect_line():
     line = 0
     # detects black line
     if abs(error) < 3000:
-        basic.pause(50)
+        basic.pause(10)
         CutebotPro.pwm_cruise_control(0, 0)
         straighten_to_line()
         line = 1
