@@ -5,21 +5,19 @@ function straighten_to_line() {
     // keep counter to break while loop
     let count = 0
     let error = CutebotPro.getOffset()
-    CutebotPro.pwmCruiseControl(20, 20)
-    basic.pause(50)
     //  turn on headlights(pink = 247, 25, 236)
     CutebotPro.singleHeadlights(CutebotProRGBLight.RGBL, 247, 25, 236)
     CutebotPro.singleHeadlights(CutebotProRGBLight.RGBR, 247, 25, 236)
     // keep turning till we are straight
-    while (Math.abs(error) > 50 && count < 50) {
+    while (Math.abs(error) > 0 && count < 50) {
         //  update count of while loop iterations so we can prevent getting stuck
         count = count + 1
         // get offset
         error = CutebotPro.getOffset()
         //  set turn speed
-        speed = 30 + Math.abs(error) / 3000 * 70
+        speed = 50 + Math.abs(error) / 3000 * 50
         //  turn right
-        if (error < 0) {
+        if (error > 0) {
             // turn on right headlight(blue = 51, 255, 252)
             CutebotPro.singleHeadlights(CutebotProRGBLight.RGBR, 51, 255, 252)
             CutebotPro.pwmCruiseControl(speed, 0)
@@ -27,7 +25,7 @@ function straighten_to_line() {
         }
         
         //  turn left
-        if (error > 0) {
+        if (error < 0) {
             // turn on left headlight(blue = 51, 255, 252)
             CutebotPro.singleHeadlights(CutebotProRGBLight.RGBL, 51, 255, 252)
             CutebotPro.pwmCruiseControl(speed * -1, 0)
@@ -50,8 +48,8 @@ function detect_line(): number {
     let line = 0
     //  detects black line
     if (Math.abs(error) < 3000) {
-        basic.pause(10)
         CutebotPro.pwmCruiseControl(0, 0)
+        basic.pause(100)
         straighten_to_line()
         line = 1
     }
